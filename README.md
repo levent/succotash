@@ -39,5 +39,5 @@ Assumes you have a redis server running on localhost 6379.
 3. Run the topology!
 
   ``` sh
-  $ redstorm local cosm/message_count_topology.rb
+  $ redstorm local cosm/tag_count_topology.rb
   ```

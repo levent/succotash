@@ -68,7 +68,7 @@ module RedStorm
       end
     end
 
-    class MessageCountTopology < RedStorm::SimpleTopology
+    class TagCountTopology < RedStorm::SimpleTopology
 
       spout CosmFirehoseSpout
 
