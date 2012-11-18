@@ -6,16 +6,15 @@ Uses [RedStorm](https://github.com/colinsurprenant/redstorm)
 
 1. Install gems locally
 
-``` sh
-$ bundle install
-```
-
+  ``` sh
+  $ bundle install
+  ```
 
 2. Install RedStorm
 
-``` sh
-$ bundle exec redstorm install
-```
+  ``` sh
+  $ bundle exec redstorm install
+  ```
 
 ## Run
 
@@ -27,18 +26,18 @@ Assumes you have a redis server running on localhost 6379.
 
 1. Install topology gems
 
-``` sh
-$ bundle exec redstorm bundle cosm
-```
+  ``` sh
+  $ bundle exec redstorm bundle cosm
+  ```
 
 2. Configure your Cosm api key
 
-``` sh
-$ export API_KEY=cosm_api_key
-```
+  ``` sh
+  $ export API_KEY=cosm_api_key
+  ```
 
 3. Run the topology!
 
-``` sh
-$ redstorm local cosm/message_count_topology.rb
-```
+  ``` sh
+  $ redstorm local cosm/message_count_topology.rb
+  ```
