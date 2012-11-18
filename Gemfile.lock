@@ -1,6 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    geocoder (1.1.5)
     json (1.5.0)
     json (1.5.0-java)
     json-jruby (1.5.0-java)
@@ -14,6 +15,7 @@ PLATFORMS
   java
 
 DEPENDENCIES
+  geocoder
   json-jruby
   redis
   redstorm

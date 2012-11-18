@@ -1,3 +1,4 @@
+require 'geocoder'
 require 'red_storm'
 require 'json'
 require 'socket'
@@ -34,11 +35,32 @@ module RedStorm
 
     end
 
+    class JsonParseGeoBolt < RedStorm::SimpleBolt
+      output_fields :geo
+      on_receive do |something|
+        tags = []
+        json = JSON.parse(something.getString(0))['body']
+        if json
+          location = json['location']
+          if location && location['lat'] && location['lon']
+            "#{location['lat']},#{location['lon']}"
+          end
+        end
+      end
+    end
+
     class JsonParseTagsBolt < RedStorm::SimpleBolt
       output_fields :tag
       on_receive do |something|
         tags = []
         json = JSON.parse(something.getString(0))['body']
+        begin
+          location = json['location']
+          lat = location['lat']
+          lon = location['lon']
+          geo = "#{lat},#{lon}"
+        rescue
+        end
         if json
           tags = [*json['datastreams']].map{|ds| ds['tags']} << json['tags']
         end
@@ -46,7 +68,7 @@ module RedStorm
         if tags.any?
           tags.map{|w| [w]}
         else
-          ['N/A']
+          nil
         end
       end
     end
@@ -68,9 +90,27 @@ module RedStorm
       end
     end
 
+    class GeoCountBolt < RedStorm::SimpleBolt
+      on_init do
+        @redis = Redis.new(:host => 'localhost', :port => 6379)
+      end
+
+      on_receive do |tuple|
+        coords = tuple.getString(0)
+        begin
+          @redis.zincrby 'cosm_countries', 1, Geocoder.search(coords).first.country
+        rescue
+        end
+      end
+    end
+
     class TagCountTopology < RedStorm::SimpleTopology
 
       spout CosmFirehoseSpout
+
+      bolt JsonParseGeoBolt, :parallelism => 2 do
+        source CosmFirehoseSpout, :shuffle => true
+      end
 
       bolt JsonParseTagsBolt, :parallelism => 2 do
         source CosmFirehoseSpout, :shuffle => true
@@ -82,7 +122,11 @@ module RedStorm
 
       bolt TagCountBolt, :parallelism => 4 do
         source TagDowncaseBolt, :shuffle => true
-        debug true
+        debug false
+      end
+
+      bolt GeoCountBolt, :parallelism => 1 do
+        source JsonParseGeoBolt, :shuffle => true
       end
 
       configure do |env|
