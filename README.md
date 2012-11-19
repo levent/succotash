@@ -45,5 +45,5 @@ Assumes you have a redis server running on localhost 6379.
 3. Run the topology!
 
   ``` sh
-  $ redstorm local cosm/tag_count_topology.rb
+  $ bundle exec redstorm local cosm/firehose_count_topology.rb
   ```
