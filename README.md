@@ -4,13 +4,19 @@ Uses [RedStorm](https://github.com/colinsurprenant/redstorm)
 
 ## Install
 
-1. Install gems locally
+1. Set JRuby in 1.9 mode
+
+  ``` sh
+  export JRUBY_OPTS=--1.9
+  ```
+
+2. Install gems locally
 
   ``` sh
   $ bundle install
   ```
 
-2. Install RedStorm
+3. Install RedStorm
 
   ``` sh
   $ bundle exec redstorm install
